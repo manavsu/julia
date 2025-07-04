@@ -83,18 +83,18 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             _ => "░".cyan().to_string(),
         },
         ColorScheme::Blues => {
-            // Blues monochrome with higher contrast
-            if intensity > 90 {
+            // Updated Blues to match Purple/Green/Gray threshold style
+            if intensity > 7 {
                 base_char.bright_white().on_bright_blue().to_string()
-            } else if intensity > 75 {
+            } else if intensity > 6 {
                 base_char.white().on_blue().to_string()
-            } else if intensity > 60 {
+            } else if intensity > 5 {
                 base_char.bright_blue().to_string()
-            } else if intensity > 45 {
+            } else if intensity > 4 {
                 base_char.blue().to_string()
-            } else if intensity > 30 {
+            } else if intensity > 3 {
                 base_char.bright_black().on_bright_black().to_string()
-            } else if intensity > 15 {
+            } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
