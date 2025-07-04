@@ -57,30 +57,30 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
 
     // Select character based on depth
     let base_char = match char_selector {
-        0 => "█",
-        1 => "▓",
-        2 => "▒",
-        _ => "░",
+        0 => "▀",
+        1 => "▄",
+        2 => "▀",
+        _ => "▄",
     };
 
     match scheme {
         ColorScheme::Rainbow => match iterations % 16 {
-            0 => "█".black().to_string(),
-            1 => "█".blue().to_string(),
-            2 => "█".cyan().to_string(),
-            3 => "█".green().to_string(),
-            4 => "█".magenta().to_string(),
-            5 => "█".purple().to_string(),
-            6 => "█".red().to_string(),
-            7 => "█".yellow().to_string(),
-            8 => "▓".blue().to_string(),
-            9 => "▓".cyan().to_string(),
-            10 => "▓".green().to_string(),
-            11 => "▓".magenta().to_string(),
-            12 => "▒".blue().to_string(),
-            13 => "▒".cyan().to_string(),
-            14 => "░".blue().to_string(),
-            _ => "░".cyan().to_string(),
+            0 => "▀".black().to_string(),
+            1 => "▄".blue().to_string(),
+            2 => "▀".cyan().to_string(),
+            3 => "▄".green().to_string(),
+            4 => "▀".magenta().to_string(),
+            5 => "▄".purple().to_string(),
+            6 => "▀".red().to_string(),
+            7 => "▄".yellow().to_string(),
+            8 => "▀".blue().to_string(),
+            9 => "▄".cyan().to_string(),
+            10 => "▀".green().to_string(),
+            11 => "▄".magenta().to_string(),
+            12 => "▀".blue().to_string(),
+            13 => "▄".cyan().to_string(),
+            14 => "▀".blue().to_string(),
+            _ => "▄".cyan().to_string(),
         },
         ColorScheme::Blues => {
             // Updated Blues to match Purple/Green/Gray threshold style
