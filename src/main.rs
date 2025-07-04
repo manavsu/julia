@@ -7,7 +7,6 @@ mod app;
 mod fractal;
 mod ui;
 mod utils;
-// mod julia_set;  // We can comment this out since we're not using it anymore
 
 use app::state::AppState;
 use fractal::julia::measure_complexity;

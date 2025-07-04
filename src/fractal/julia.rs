@@ -1,6 +1,5 @@
 use num_complex::Complex;
 use super::parameters::FractalParameters;
-use crate::julia_set::JuliaSet;
 
 pub const MAX_ITERATIONS: u32 = 100;
 
@@ -20,14 +19,6 @@ pub fn map_point_to_complex(x: u16, y: u16, width: u16, height: u16, params: &Fr
     let aspect_ratio = height as f64 / width as f64;
     let real = (x as f64 / width as f64 - 0.5) * 3.0 / params.zoom + params.x_offset;
     let imag = (y as f64 / height as f64 - 0.5) * 3.0 * aspect_ratio / params.zoom + params.y_offset;
-    Complex::new(real, imag)
-}
-
-// Compatibility function for the old JuliaSet type
-pub fn map_julia_to_complex(x: u16, y: u16, width: u16, height: u16, julia: &JuliaSet) -> Complex<f64> {
-    let aspect_ratio = height as f64 / width as f64;
-    let real = (x as f64 / width as f64 - 0.5) * 3.0 / julia.zoom + julia.x_offset;
-    let imag = (y as f64 / height as f64 - 0.5) * 3.0 * aspect_ratio / julia.zoom + julia.y_offset;
     Complex::new(real, imag)
 }
 
