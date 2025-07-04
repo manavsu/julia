@@ -56,8 +56,8 @@ pub fn calculate_transition_time(julia: &JuliaSet, width: u16, height: u16) -> f
     
     // Sample evenly across the screen
     for i in 0..sample_size {
-        let x = (i % 10) as u16 * (width / 10);
-        let y = (i / 10) as u16 * (height / 10);
+        let x = (i % 10) as u16 * (width / 10).max(1);
+        let y = (i / 10) as u16 * (height / 10).max(1);
         
         let z = map_to_complex(x, y, width, height, julia);
         let iterations = calculate_julia(z, julia.c);
@@ -66,12 +66,24 @@ pub fn calculate_transition_time(julia: &JuliaSet, width: u16, height: u16) -> f
     
     // Calculate standard deviation to measure complexity
     let mean = iteration_counts.iter().sum::<u32>() as f64 / sample_size as f64;
+    
+    // Handle potential empty sample
+    if iteration_counts.is_empty() {
+        return TRANSITION_TIME; // Default to constant
+    }
+    
     let variance = iteration_counts.iter()
         .map(|&x| {
             let diff = x as f64 - mean;
             diff * diff
         })
         .sum::<f64>() / sample_size as f64;
+    
+    // Protect against NaN
+    if variance.is_nan() || variance <= 0.0 {
+        return TRANSITION_TIME; // Default to constant
+    }
+    
     let std_dev = variance.sqrt();
     
     // Normalize the standard deviation to a 0.0-1.0 range
@@ -80,6 +92,9 @@ pub fn calculate_transition_time(julia: &JuliaSet, width: u16, height: u16) -> f
     
     // Calculate transition time - more complex = slower transitions
     let transition_time = MIN_TRANSITION_TIME + normalized_complexity * (MAX_TRANSITION_TIME - MIN_TRANSITION_TIME);
+    
+    // Print info for debugging
+    println!("Complexity: {:.2}, Time: {:.2}s", normalized_complexity, transition_time);
     
     transition_time
 }
