@@ -82,70 +82,70 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             _ => base_char.cyan().to_string(),
         },
         ColorScheme::Blues => {
-            // Use iterations directly for intensity thresholds
-            if iterations > 80 {
+            // Lower iteration thresholds
+            if iterations > 50 {
                 base_char.bright_white().on_bright_blue().to_string()
-            } else if iterations > 60 {
+            } else if iterations > 35 {
                 base_char.white().on_blue().to_string()
-            } else if iterations > 40 {
-                base_char.bright_blue().to_string()
             } else if iterations > 20 {
-                base_char.blue().to_string()
+                base_char.bright_blue().to_string()
             } else if iterations > 10 {
-                base_char.bright_black().on_bright_black().to_string()
+                base_char.blue().to_string()
             } else if iterations > 5 {
+                base_char.bright_black().on_bright_black().to_string()
+            } else if iterations > 2 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         }
         ColorScheme::Greens => {
-            // Use iterations directly for intensity thresholds
-            if iterations > 80 {
+            // Lower iteration thresholds
+            if iterations > 50 {
                 base_char.bright_white().on_bright_green().to_string()
-            } else if iterations > 60 {
+            } else if iterations > 35 {
                 base_char.white().on_green().to_string()
-            } else if iterations > 40 {
-                base_char.bright_green().to_string()
             } else if iterations > 20 {
-                base_char.green().to_string()
+                base_char.bright_green().to_string()
             } else if iterations > 10 {
+                base_char.green().to_string()
+            } else if iterations > 5 {
                 " ".on_bright_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         }
         ColorScheme::Purples => {
-            // Use iterations directly for intensity thresholds
-            if iterations > 80 {
+            // Lower iteration thresholds
+            if iterations > 50 {
                 base_char.bright_white().on_bright_magenta().to_string()
-            } else if iterations > 60 {
+            } else if iterations > 35 {
                 base_char.white().on_magenta().to_string()
-            } else if iterations > 40 {
-                base_char.bright_magenta().to_string()
             } else if iterations > 20 {
-                base_char.magenta().to_string()
+                base_char.bright_magenta().to_string()
             } else if iterations > 10 {
-                base_char.bright_magenta().on_bright_black().to_string()
+                base_char.magenta().to_string()
             } else if iterations > 5 {
+                base_char.bright_magenta().on_bright_black().to_string()
+            } else if iterations > 2 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         },
         ColorScheme::Grays => {
-            // Use iterations directly for intensity thresholds
-            if iterations > 80 {
+            // Lower iteration thresholds
+            if iterations > 50 {
                 base_char.bright_white().on_white().to_string()
-            } else if iterations > 60 {
+            } else if iterations > 35 {
                 base_char.bright_white().to_string()
-            } else if iterations > 40 {
-                base_char.white().to_string()
             } else if iterations > 20 {
-                base_char.bright_black().to_string()
+                base_char.white().to_string()
             } else if iterations > 10 {
-                base_char.black().on_bright_black().to_string()
+                base_char.bright_black().to_string()
             } else if iterations > 5 {
+                base_char.black().on_bright_black().to_string()
+            } else if iterations > 2 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
