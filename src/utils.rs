@@ -47,40 +47,40 @@ pub fn map_to_complex(x: u16, y: u16, width: u16, height: u16, julia: &JuliaSet)
 }
 
 pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
-    if iterations == MAX_ITERATIONS {
-        return " ".on_black().to_string();
-    }
-
-    // Scale iterations for color intensity
-    let intensity = (iterations as f32 / MAX_ITERATIONS as f32 * 100.0) as u8;
-    let char_selector = iterations % 4;
-
     // Select character based on depth
+    let char_selector = iterations % 4;
     let base_char = match char_selector {
         0 => "▀",
         1 => "▄",
         2 => "▀",
         _ => "▄",
     };
+    
+    if iterations == MAX_ITERATIONS {
+        return base_char.on_black().black().to_string();
+    }
+
+    // Scale iterations for color intensity
+    let intensity = (iterations as f32 / MAX_ITERATIONS as f32 * 100.0) as u8;
 
     match scheme {
         ColorScheme::Rainbow => match iterations % 16 {
-            0 => "▀".black().to_string(),
-            1 => "▄".blue().to_string(),
-            2 => "▀".cyan().to_string(),
-            3 => "▄".green().to_string(),
-            4 => "▀".magenta().to_string(),
-            5 => "▄".purple().to_string(),
-            6 => "▀".red().to_string(),
-            7 => "▄".yellow().to_string(),
-            8 => "▀".blue().to_string(),
-            9 => "▄".cyan().to_string(),
-            10 => "▀".green().to_string(),
-            11 => "▄".magenta().to_string(),
-            12 => "▀".blue().to_string(),
-            13 => "▄".cyan().to_string(),
-            14 => "▀".blue().to_string(),
-            _ => "▄".cyan().to_string(),
+            0 => base_char.black().to_string(),
+            1 => base_char.blue().to_string(),
+            2 => base_char.cyan().to_string(),
+            3 => base_char.green().to_string(),
+            4 => base_char.magenta().to_string(),
+            5 => base_char.purple().to_string(),
+            6 => base_char.red().to_string(),
+            7 => base_char.yellow().to_string(),
+            8 => base_char.blue().to_string(),
+            9 => base_char.cyan().to_string(),
+            10 => base_char.green().to_string(),
+            11 => base_char.magenta().to_string(),
+            12 => base_char.blue().to_string(),
+            13 => base_char.cyan().to_string(),
+            14 => base_char.blue().to_string(),
+            _ => base_char.cyan().to_string(),
         },
         ColorScheme::Blues => {
             // Updated Blues to match Purple/Green/Gray threshold style
@@ -97,7 +97,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                " ".on_black().to_string()
+                base_char.black().on_black().to_string()
             }
         }
         ColorScheme::Greens => {
@@ -111,9 +111,9 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 3 {
                 base_char.green().to_string()
             } else if intensity > 2 {
-                " ".on_bright_black().to_string()
+                base_char.black().on_bright_black().to_string()
             } else {
-                " ".on_black().to_string()
+                base_char.black().on_black().to_string()
             }
         }
         ColorScheme::Purples => {
@@ -131,7 +131,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                " ".on_black().to_string()
+                base_char.black().on_black().to_string()
             }
         },
         ColorScheme::Grays => {
@@ -149,7 +149,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                " ".on_black().to_string()
+                base_char.black().on_black().to_string()
             }
         }
     }
