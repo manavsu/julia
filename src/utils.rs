@@ -51,11 +51,10 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
         return " ".on_black().to_string();
     }
 
-    // Scale iterations for color intensity
-    let intensity = (iterations as f32 / MAX_ITERATIONS as f32 * 100.0) as u8;
+    // Use iterations directly for character selection
     let char_selector = iterations % 4;
 
-    // Select character based on depth
+    // Select character based on iterations
     let base_char = match char_selector {
         0 => "█",
         1 => "▓",
@@ -83,70 +82,70 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             _ => base_char.cyan().to_string(),
         },
         ColorScheme::Blues => {
-            // Updated Blues to match Purple/Green/Gray threshold style
-            if intensity > 7 {
+            // Use iterations directly for intensity thresholds
+            if iterations > 80 {
                 base_char.bright_white().on_bright_blue().to_string()
-            } else if intensity > 6 {
+            } else if iterations > 60 {
                 base_char.white().on_blue().to_string()
-            } else if intensity > 5 {
+            } else if iterations > 40 {
                 base_char.bright_blue().to_string()
-            } else if intensity > 4 {
+            } else if iterations > 20 {
                 base_char.blue().to_string()
-            } else if intensity > 3 {
+            } else if iterations > 10 {
                 base_char.bright_black().on_bright_black().to_string()
-            } else if intensity > 1 {
+            } else if iterations > 5 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         }
         ColorScheme::Greens => {
-            // Greens monochrome with higher contrast
-            if intensity > 6 {
+            // Use iterations directly for intensity thresholds
+            if iterations > 80 {
                 base_char.bright_white().on_bright_green().to_string()
-            } else if intensity > 5 {
+            } else if iterations > 60 {
                 base_char.white().on_green().to_string()
-            } else if intensity > 4 {
+            } else if iterations > 40 {
                 base_char.bright_green().to_string()
-            } else if intensity > 3 {
+            } else if iterations > 20 {
                 base_char.green().to_string()
-            } else if intensity > 2 {
+            } else if iterations > 10 {
                 " ".on_bright_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         }
         ColorScheme::Purples => {
-            // Purples with higher contrast
-            if intensity > 7 {
+            // Use iterations directly for intensity thresholds
+            if iterations > 80 {
                 base_char.bright_white().on_bright_magenta().to_string()
-            } else if intensity > 6 {
+            } else if iterations > 60 {
                 base_char.white().on_magenta().to_string()
-            } else if intensity > 5 {
+            } else if iterations > 40 {
                 base_char.bright_magenta().to_string()
-            } else if intensity > 4 {
+            } else if iterations > 20 {
                 base_char.magenta().to_string()
-            } else if intensity > 3 {
+            } else if iterations > 10 {
                 base_char.bright_magenta().on_bright_black().to_string()
-            } else if intensity > 1 {
+            } else if iterations > 5 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
             }
         },
         ColorScheme::Grays => {
-            // Updated grayscale to match Purple/Green threshold style
-            if intensity > 7 {
+            // Use iterations directly for intensity thresholds
+            if iterations > 80 {
                 base_char.bright_white().on_white().to_string()
-            } else if intensity > 6 {
+            } else if iterations > 60 {
                 base_char.bright_white().to_string()
-            } else if intensity > 5 {
+            } else if iterations > 40 {
                 base_char.white().to_string()
-            } else if intensity > 4 {
+            } else if iterations > 20 {
                 base_char.bright_black().to_string()
-            } else if intensity > 3 {
+            } else if iterations > 10 {
                 base_char.black().on_bright_black().to_string()
-            } else if intensity > 1 {
+            } else if iterations > 5 {
                 base_char.black().on_black().to_string()
             } else {
                 " ".on_black().to_string()
