@@ -4,7 +4,7 @@ use num_complex::Complex;
 use crate::julia_set::JuliaSet;
 
 pub const MAX_ITERATIONS: u32 = 100;
-pub const BASE_TRANSITION_TIME: f64 = 10.0; // Base transition time
+pub const TRANSITION_TIME: f64 = 10.0; // Keep original constant for compatibility
 pub const MIN_TRANSITION_TIME: f64 = 5.0;  // Minimum transition time (fast)
 pub const MAX_TRANSITION_TIME: f64 = 20.0; // Maximum transition time (slow)
 
