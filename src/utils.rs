@@ -47,21 +47,21 @@ pub fn map_to_complex(x: u16, y: u16, width: u16, height: u16, julia: &JuliaSet)
 }
 
 pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
-    // Select character based on depth
-    let char_selector = iterations % 4;
-    let base_char = match char_selector {
-        0 => "▀",
-        1 => "▄",
-        2 => "▀",
-        _ => "▄",
-    };
-    
     if iterations == MAX_ITERATIONS {
-        return base_char.on_black().black().to_string();
+        return " ".on_black().to_string();
     }
 
     // Scale iterations for color intensity
     let intensity = (iterations as f32 / MAX_ITERATIONS as f32 * 100.0) as u8;
+    let char_selector = iterations % 4;
+
+    // Select character based on depth
+    let base_char = match char_selector {
+        0 => "█",
+        1 => "▓",
+        2 => "▒",
+        _ => "░",
+    };
 
     match scheme {
         ColorScheme::Rainbow => match iterations % 16 {
@@ -97,7 +97,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                base_char.black().on_black().to_string()
+                " ".on_black().to_string()
             }
         }
         ColorScheme::Greens => {
@@ -111,9 +111,9 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 3 {
                 base_char.green().to_string()
             } else if intensity > 2 {
-                base_char.black().on_bright_black().to_string()
+                " ".on_bright_black().to_string()
             } else {
-                base_char.black().on_black().to_string()
+                " ".on_black().to_string()
             }
         }
         ColorScheme::Purples => {
@@ -131,7 +131,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                base_char.black().on_black().to_string()
+                " ".on_black().to_string()
             }
         },
         ColorScheme::Grays => {
@@ -149,7 +149,7 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else if intensity > 1 {
                 base_char.black().on_black().to_string()
             } else {
-                base_char.black().on_black().to_string()
+                " ".on_black().to_string()
             }
         }
     }
