@@ -2,6 +2,7 @@ use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEvent},
     execute,
+    terminal,
 };
 use std::io::{self, Write, stdout};
 use std::thread;

@@ -25,12 +25,14 @@ pub fn render_julia_set(julia: &JuliaSet, color_scheme: ColorScheme) -> io::Resu
     Ok(())
 }
 
-pub fn setup_terminal() -> io::Result<()> {
+pub fn setup_terminal() -> io::Result<(u16, u16)> {
     terminal::enable_raw_mode()?;
     let mut stdout = stdout();
     execute!(stdout, terminal::EnterAlternateScreen, cursor::Hide,)?;
-
-    Ok(())
+    
+    // Return terminal size
+    let (width, height) = terminal::size()?;
+    Ok((width, height))
 }
 
 pub fn cleanup_terminal() -> io::Result<()> {
