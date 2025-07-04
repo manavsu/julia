@@ -4,7 +4,9 @@ use num_complex::Complex;
 use crate::julia_set::JuliaSet;
 
 pub const MAX_ITERATIONS: u32 = 100;
-pub const TRANSITION_TIME: f64 = 10.0;
+pub const BASE_TRANSITION_TIME: f64 = 10.0; // Base transition time
+pub const MIN_TRANSITION_TIME: f64 = 5.0;  // Minimum transition time (fast)
+pub const MAX_TRANSITION_TIME: f64 = 20.0; // Maximum transition time (slow)
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ColorScheme {
@@ -44,6 +46,42 @@ pub fn map_to_complex(x: u16, y: u16, width: u16, height: u16, julia: &JuliaSet)
     let real = (x as f64 / width as f64 - 0.5) * 3.0 / julia.zoom + julia.x_offset;
     let imag = (y as f64 / height as f64 - 0.5) * 3.0 * aspect_ratio / julia.zoom + julia.y_offset;
     Complex::new(real, imag)
+}
+
+// Sample the Julia set to determine its complexity/interestingness
+pub fn calculate_transition_time(julia: &JuliaSet, width: u16, height: u16) -> f64 {
+    // Take a sample of points to analyze complexity
+    let sample_size = 100;
+    let mut iteration_counts = Vec::with_capacity(sample_size);
+    
+    // Sample evenly across the screen
+    for i in 0..sample_size {
+        let x = (i % 10) as u16 * (width / 10);
+        let y = (i / 10) as u16 * (height / 10);
+        
+        let z = map_to_complex(x, y, width, height, julia);
+        let iterations = calculate_julia(z, julia.c);
+        iteration_counts.push(iterations);
+    }
+    
+    // Calculate standard deviation to measure complexity
+    let mean = iteration_counts.iter().sum::<u32>() as f64 / sample_size as f64;
+    let variance = iteration_counts.iter()
+        .map(|&x| {
+            let diff = x as f64 - mean;
+            diff * diff
+        })
+        .sum::<f64>() / sample_size as f64;
+    let std_dev = variance.sqrt();
+    
+    // Normalize the standard deviation to a 0.0-1.0 range
+    // Higher std_dev means more interesting patterns
+    let normalized_complexity = (std_dev / (MAX_ITERATIONS as f64 / 2.0)).min(1.0);
+    
+    // Calculate transition time - more complex = slower transitions
+    let transition_time = MIN_TRANSITION_TIME + normalized_complexity * (MAX_TRANSITION_TIME - MIN_TRANSITION_TIME);
+    
+    transition_time
 }
 
 pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
