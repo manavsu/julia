@@ -133,20 +133,23 @@ pub fn get_color(iterations: u32, scheme: ColorScheme) -> String {
             } else {
                 " ".on_black().to_string()
             }
-        }
+        },
         ColorScheme::Grays => {
-            // Enhanced grayscale with true white to black gradient
-            match intensity {
-                90..=100 => base_char.bright_white().on_white().to_string(),
-                80..=89 => base_char.bright_white().to_string(),
-                70..=79 => "█".white().to_string(),
-                60..=69 => "▓".white().to_string(),
-                50..=59 => "▒".white().to_string(),
-                40..=49 => "░".white().to_string(),
-                30..=39 => "░".bright_black().to_string(),
-                20..=29 => " ".on_bright_black().to_string(),
-                10..=19 => " ".on_black().bright_black().to_string(),
-                _ => " ".on_black().to_string(),
+            // Updated grayscale to match Purple/Green threshold style
+            if intensity > 7 {
+                base_char.bright_white().on_white().to_string()
+            } else if intensity > 6 {
+                base_char.bright_white().to_string()
+            } else if intensity > 5 {
+                base_char.white().to_string()
+            } else if intensity > 4 {
+                base_char.bright_black().to_string()
+            } else if intensity > 3 {
+                base_char.black().on_bright_black().to_string()
+            } else if intensity > 1 {
+                base_char.black().on_black().to_string()
+            } else {
+                " ".on_black().to_string()
             }
         }
     }
