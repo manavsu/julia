@@ -30,7 +30,7 @@ impl AppState {
     }
 
     pub fn start_new_transition(&mut self, complexity: f64) {
-        self.current_fractal = self.next_fractal;
+        self.current_fractal = self.next_fractal.clone();
         self.next_fractal = FractalParameters::random();
         self.transition_start = Instant::now();
         self.update_transition_time(complexity);

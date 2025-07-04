@@ -7,14 +7,12 @@ mod app;
 mod fractal;
 mod ui;
 mod utils;
-mod julia_set;  // Access the old JuliaSet structure
+// mod julia_set;  // We can comment this out since we're not using it anymore
 
 use app::state::AppState;
 use fractal::julia::measure_complexity;
-use fractal::parameters::FractalParameters;
 use ui::terminal::{setup_terminal, cleanup_terminal, display_help};
 use ui::renderer::render_fractal;
-use ui::colors::ColorScheme;
 
 fn main() -> io::Result<()> {
     let screen_size = setup_terminal()?;

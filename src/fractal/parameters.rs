@@ -1,6 +1,7 @@
 use num_complex::Complex;
 use rand::prelude::*;
 
+#[derive(Clone)]
 pub struct FractalParameters {
     pub c: Complex<f64>,
     pub zoom: f64,
