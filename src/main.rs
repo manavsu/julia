@@ -1,117 +1,100 @@
-use crossterm::{
-    cursor,
-    event::{self, Event, KeyCode, KeyEvent},
-    execute,
-    terminal,
-};
-use std::io::{self, Write, stdout};
+use crossterm::event::{self, Event, KeyCode, KeyEvent};
+use std::io;
 use std::thread;
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
-mod julia_set;
-mod renderer;
+mod app;
+mod fractal;
+mod ui;
 mod utils;
 
-use julia_set::JuliaSet;
-use renderer::{cleanup_terminal, render_julia_set, setup_terminal};
-use utils::{ColorScheme, calculate_transition_time};
-
-fn display_help() -> io::Result<()> {
-    let mut stdout = stdout();
-    execute!(stdout, cursor::MoveTo(0, 0))?;
-    println!("Julia Set Fractal Screensaver");
-    println!("---------------------------");
-    println!("Commands:");
-    println!("  q: Quit");
-    println!("  c: Change color scheme");
-    println!("  n: New random Julia set");
-    println!("  h: Show/hide this help");
-    println!("Press any key to continue...");
-    stdout.flush()?;
-    Ok(())
-}
+use app::AppState;
+use fractal::measure_complexity;
+use ui::{setup_terminal, cleanup_terminal, render_fractal, display_help};
 
 fn main() -> io::Result<()> {
-    // Set up terminal
-    let (width, height) = setup_terminal()?;
-
-    // Set up Julia sets for animation
-    let mut current_julia = JuliaSet::random();
-    let mut next_julia = JuliaSet::random();
-    let mut transition_start = Instant::now();
-    let mut color_scheme = ColorScheme::Rainbow;
-    let mut show_help = false;
+    let screen_size = setup_terminal()?;
     
-    // Calculate initial transition time based on complexity
-    let mut current_transition_time = calculate_transition_time(&current_julia, width, height);
+    let mut app_state = AppState::new();
+    
+    let initial_complexity = measure_complexity(
+        &app_state.current_fractal, 
+        screen_size.width, 
+        screen_size.height
+    );
+    app_state.update_transition_time(initial_complexity);
 
-    // Main loop
     loop {
-        // Check for key press
         if event::poll(Duration::from_millis(10))? {
             if let Event::Key(KeyEvent { code, .. }) = event::read()? {
                 match code {
                     KeyCode::Char('q') => break,
                     KeyCode::Char('c') => {
-                        color_scheme = color_scheme.next();
+                        app_state.next_color_scheme();
                     }
                     KeyCode::Char('n') => {
-                        current_julia = next_julia;
-                        next_julia = JuliaSet::random();
-                        transition_start = Instant::now();
-                        // Recalculate transition time for new julia set
-                        current_transition_time = calculate_transition_time(&current_julia, width, height);
+                        let complexity = measure_complexity(
+                            &app_state.next_fractal, 
+                            screen_size.width, 
+                            screen_size.height
+                        );
+                        app_state.start_new_transition(complexity);
                     }
                     KeyCode::Char('h') => {
-                        show_help = !show_help;
-                        if !show_help {
-                            // Force a full redraw when hiding help
-                            render_julia_set(&current_julia, color_scheme)?
+                        app_state.toggle_help();
+                        if !app_state.show_help {
+                            render_fractal(
+                                &app_state.current_fractal,
+                                app_state.color_scheme, 
+                                screen_size.width, 
+                                screen_size.height
+                            )?;
                         }
                     }
                     _ => {
-                        if show_help {
-                            show_help = false;
-                            // Force a full redraw when hiding help
-                            render_julia_set(&current_julia, color_scheme)?
+                        if app_state.show_help {
+                            app_state.show_help = false;
+                            render_fractal(
+                                &app_state.current_fractal,
+                                app_state.color_scheme, 
+                                screen_size.width, 
+                                screen_size.height
+                            )?;
                         }
                     }
                 }
             }
         }
 
-        if show_help {
+        if app_state.show_help {
             display_help()?;
             thread::sleep(Duration::from_millis(100));
             continue;
         }
 
-        // Calculate transition progress using dynamic transition time
-        let elapsed = transition_start.elapsed().as_secs_f64();
-        let transition_progress = (elapsed / current_transition_time).min(1.0);
+        let elapsed = app_state.transition_start.elapsed().as_secs_f64();
 
-        // If transition is complete, start a new one
-        if transition_progress >= 1.0 {
-            current_julia = next_julia;
-            next_julia = JuliaSet::random();
-            transition_start = Instant::now();
-            
-            // Recalculate transition time based on complexity of new Julia set
-            current_transition_time = calculate_transition_time(&current_julia, width, height);
+        if app_state.is_transition_complete(elapsed) {
+            let complexity = measure_complexity(
+                &app_state.next_fractal, 
+                screen_size.width, 
+                screen_size.height
+            );
+            app_state.start_new_transition(complexity);
         }
 
-        // Interpolate between current and next Julia sets
-        let interpolated_julia = current_julia.lerp(&next_julia, transition_progress);
+        let current_fractal = app_state.current_fractal_interpolated(elapsed);
 
-        // Render the interpolated Julia set
-        render_julia_set(&interpolated_julia, color_scheme)?;
+        render_fractal(
+            &current_fractal, 
+            app_state.color_scheme,
+            screen_size.width, 
+            screen_size.height
+        )?;
 
-        // Short sleep to avoid maxing out CPU
         thread::sleep(Duration::from_millis(50));
     }
 
-    // Clean up terminal
     cleanup_terminal()?;
-
     Ok(())
 }
