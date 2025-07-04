@@ -7,14 +7,13 @@ mod app;
 mod fractal;
 mod ui;
 mod utils;
-mod julia_set;  // Add this to access the old JuliaSet structure
+mod julia_set;  // Access the old JuliaSet structure
 
 use app::state::AppState;
 use fractal::julia::measure_complexity;
 use fractal::parameters::FractalParameters;
-use ui::terminal::{setup_terminal, cleanup_terminal};
+use ui::terminal::{setup_terminal, cleanup_terminal, display_help};
 use ui::renderer::render_fractal;
-use ui::terminal::display_help;
 use ui::colors::ColorScheme;
 
 fn main() -> io::Result<()> {

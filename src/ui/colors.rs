@@ -1,5 +1,5 @@
 use colored::Colorize;
-use crate::fractal::MAX_ITERATIONS;
+use crate::fractal::julia::MAX_ITERATIONS;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ColorScheme {
