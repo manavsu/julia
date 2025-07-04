@@ -1,9 +1,9 @@
 use std::io::{self, Write, stdout};
 use crossterm::{cursor, execute};
 
-use crate::fractal::{FractalParameters, calculate_iterations, map_point_to_complex};
-use crate::ui::ColorScheme;
-use crate::ui::colors::get_color;
+use crate::fractal::parameters::FractalParameters;
+use crate::fractal::julia::{calculate_iterations, map_point_to_complex};
+use crate::ui::colors::{ColorScheme, get_color};
 
 pub fn render_fractal(params: &FractalParameters, color_scheme: ColorScheme, width: u16, height: u16) -> io::Result<()> {
     let mut stdout = stdout();

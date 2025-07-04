@@ -1,6 +1,6 @@
 use num_complex::Complex;
 use super::parameters::FractalParameters;
-use super::julia_set::JuliaSet;
+use crate::julia_set::JuliaSet;
 
 pub const MAX_ITERATIONS: u32 = 100;
 

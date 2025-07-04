@@ -1,7 +1,7 @@
 use std::time::Instant;
 
-use crate::fractal::FractalParameters;
-use crate::ui::ColorScheme;
+use crate::fractal::parameters::FractalParameters;
+use crate::ui::colors::ColorScheme;
 use crate::utils::constants::{MIN_TRANSITION_TIME, MAX_TRANSITION_TIME};
 
 pub struct AppState {
