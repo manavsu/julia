@@ -13,7 +13,7 @@ mod utils;
 
 use julia_set::JuliaSet;
 use renderer::{cleanup_terminal, render_julia_set, setup_terminal};
-use utils::{ColorScheme, TRANSITION_TIME};
+use utils::{ColorScheme, calculate_transition_time};
 
 fn display_help() -> io::Result<()> {
     let mut stdout = stdout();
@@ -32,7 +32,7 @@ fn display_help() -> io::Result<()> {
 
 fn main() -> io::Result<()> {
     // Set up terminal
-    setup_terminal()?;
+    let (width, height) = setup_terminal()?;
 
     // Set up Julia sets for animation
     let mut current_julia = JuliaSet::random();
@@ -40,6 +40,9 @@ fn main() -> io::Result<()> {
     let mut transition_start = Instant::now();
     let mut color_scheme = ColorScheme::Rainbow;
     let mut show_help = false;
+    
+    // Calculate initial transition time based on complexity
+    let mut current_transition_time = calculate_transition_time(&current_julia, width, height);
 
     // Main loop
     loop {
@@ -55,6 +58,8 @@ fn main() -> io::Result<()> {
                         current_julia = next_julia;
                         next_julia = JuliaSet::random();
                         transition_start = Instant::now();
+                        // Recalculate transition time for new julia set
+                        current_transition_time = calculate_transition_time(&current_julia, width, height);
                     }
                     KeyCode::Char('h') => {
                         show_help = !show_help;
@@ -80,15 +85,18 @@ fn main() -> io::Result<()> {
             continue;
         }
 
-        // Calculate transition progress
+        // Calculate transition progress using dynamic transition time
         let elapsed = transition_start.elapsed().as_secs_f64();
-        let transition_progress = (elapsed / TRANSITION_TIME).min(1.0);
+        let transition_progress = (elapsed / current_transition_time).min(1.0);
 
         // If transition is complete, start a new one
         if transition_progress >= 1.0 {
             current_julia = next_julia;
             next_julia = JuliaSet::random();
             transition_start = Instant::now();
+            
+            // Recalculate transition time based on complexity of new Julia set
+            current_transition_time = calculate_transition_time(&current_julia, width, height);
         }
 
         // Interpolate between current and next Julia sets
