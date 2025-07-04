@@ -2,9 +2,7 @@ use std::time::Instant;
 
 use crate::fractal::FractalParameters;
 use crate::ui::ColorScheme;
-
-pub const MIN_TRANSITION_TIME: f64 = 5.0;
-pub const MAX_TRANSITION_TIME: f64 = 20.0;
+use crate::utils::constants::{MIN_TRANSITION_TIME, MAX_TRANSITION_TIME};
 
 pub struct AppState {
     pub current_fractal: FractalParameters,
